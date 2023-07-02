@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
 import ru.demchuk.messenger.ui.recyclerStreams.MainAdapterStream
@@ -20,29 +21,28 @@ import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicDelegate
 
 class Streams : Fragment() {
 
-    private var _binding: FragmentStreamsBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: FragmentStreamsBinding
     private val adapter: MainAdapterStream by lazy { MainAdapterStream() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStreamsBinding.inflate(inflater, container, false)
+        binding = FragmentStreamsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         adapter.apply {
             addDelegate(StreamAdapter())
             addDelegate(TopicAdapter())
         }
         binding.recyclerStream.adapter = adapter
+        binding.recyclerStream.layoutManager = LinearLayoutManager(context)
         //binding.recyclerStream.addItemDecoration(StickyHeaderItemDecoration())
-        adapter.submitList(stubTopicList.concatenateWithStream(stubStreamList))
+        adapter.submitList(stubTopicList.concatenateWithStream(stubStreamList).toList())
+        Log.d("vnflbanvbdkfffffffffffffffff", adapter.currentList[10].id().toString())
     }
 
     companion object {

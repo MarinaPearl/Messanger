@@ -2,15 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <Button
         android:id="@+id/stream"
+        android:backgroundTint="#1E1E1E"
         style="@style/Widget.MaterialComponents.Button.Icon"
         app:icon="@drawable/item_open_topic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
+        android:text="hello"
         android:textColor="@color/white"
         app:iconGravity="textStart"
         tools:ignore="MissingConstraints" />

@@ -1,5 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.stream
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import ru.demchuk.messenger.ui.recyclerStreams.DelegateItem
 class StreamAdapter : AdapterDelegateStream {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        Log.d("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "nfvn")
         return ViewHolder(
             StreamItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -24,6 +26,7 @@ class StreamAdapter : AdapterDelegateStream {
         item: DelegateItem,
         position: Int
     ) {
+        Log.d("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "dnvdnv")
         (holder as ViewHolder).bind(item.content() as Stream)
     }
 
@@ -32,6 +35,7 @@ class StreamAdapter : AdapterDelegateStream {
     class ViewHolder(private val bind: StreamItemBinding) : RecyclerView.ViewHolder(bind.root) {
         fun bind(stream: Stream) {
             bind.stream.text = stream.name
+            Log.d("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", bind.stream.text.toString())
         }
     }
 }

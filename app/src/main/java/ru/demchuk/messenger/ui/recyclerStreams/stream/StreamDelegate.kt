@@ -8,6 +8,6 @@ class StreamDelegate(private val id: Int, private val stream: Stream) : Delegate
     override fun id(): Int = id
 
     override fun compareToOther(other: DelegateItem): Boolean {
-        return (other as StreamDelegate).content() == content()
+        return (other as StreamDelegate).stream == content()
     }
 }

@@ -9,6 +9,6 @@ class TopicDelegate(private val id: Int, private val topic: Topic) : DelegateIte
     override fun id(): Int = id
 
     override fun compareToOther(other: DelegateItem): Boolean {
-      return (other as TopicDelegate).content() == content()
+      return (other as TopicDelegate).topic == content()
     }
 }

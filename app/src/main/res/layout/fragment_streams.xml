@@ -24,6 +24,8 @@
                 android:id="@+id/textField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:boxStrokeColor="@color/blue_green"
+                app:colorPrimary="@color/blue_green"
                 android:layout_weight="5">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -72,9 +74,8 @@
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerStream"
-            android:background="@color/blue_green"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

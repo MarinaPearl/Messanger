@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Messenger" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/blue_green</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/blue_green</item>
         <item name="colorAccent">@color/blue_green</item>
         <!-- Secondary brand color. -->

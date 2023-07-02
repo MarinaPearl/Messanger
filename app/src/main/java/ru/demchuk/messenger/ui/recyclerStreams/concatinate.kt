@@ -21,6 +21,7 @@ fun List<Topic>.concatenateWithStream(streams : List<Stream>) :List<DelegateItem
         val allTopicStream = this.filter { topic ->
             topic.stream == streamName
         }
+        Log.d("bbbbbbkkkkkkkkkkkkkkkkkkkkk", allTopicStream[0].stream)
         // Добавляем эти покупки
         allTopicStream.forEach { topic ->
             delegateItemList.add(

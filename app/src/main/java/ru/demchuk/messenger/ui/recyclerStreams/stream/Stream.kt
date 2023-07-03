@@ -2,5 +2,6 @@ package ru.demchuk.messenger.ui.recyclerStreams.stream
 
 data class Stream(
     val id: Int,
-    val name: String
+    val name: String,
+    var press: Boolean  = false
 )

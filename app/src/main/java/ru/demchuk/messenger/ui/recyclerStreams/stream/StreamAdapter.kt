@@ -1,17 +1,16 @@
 package ru.demchuk.messenger.ui.recyclerStreams.stream
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.StreamItemBinding
 import ru.demchuk.messenger.ui.recyclerStreams.AdapterDelegateStream
 import ru.demchuk.messenger.ui.recyclerStreams.DelegateItem
 
-class StreamAdapter : AdapterDelegateStream {
+class StreamAdapter(val action : (Stream) -> Unit) : AdapterDelegateStream {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        Log.d("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "nfvn")
         return ViewHolder(
             StreamItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -26,16 +25,27 @@ class StreamAdapter : AdapterDelegateStream {
         item: DelegateItem,
         position: Int
     ) {
-        Log.d("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "dnvdnv")
         (holder as ViewHolder).bind(item.content() as Stream)
     }
 
     override fun isOfViewType(item: DelegateItem): Boolean = item is StreamDelegate
 
-    class ViewHolder(private val bind: StreamItemBinding) : RecyclerView.ViewHolder(bind.root) {
+    inner class ViewHolder(private val bind: StreamItemBinding) : RecyclerView.ViewHolder(bind.root) {
         fun bind(stream: Stream) {
             bind.stream.text = stream.name
-            Log.d("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", bind.stream.text.toString())
+            bind.buttonOpenTopic.setOnClickListener { view ->
+             action(stream)
+                when (stream.press) {
+                  false -> {
+                      view.setBackgroundResource(R.drawable.item_close_topic)
+                      stream.press = true
+                  }
+                    true -> {
+                        view.setBackgroundResource(R.drawable.item_open_topic)
+                        stream.press = false
+                    }
+                }
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ import ru.demchuk.messenger.ui.recyclerStreams.concatenateWithStream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamDelegate
+import ru.demchuk.messenger.ui.recyclerStreams.toDelegateList
 import ru.demchuk.messenger.ui.recyclerStreams.topic.Topic
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicDelegate
@@ -35,14 +36,14 @@ class Streams : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.apply {
-            addDelegate(StreamAdapter())
+            addDelegate(StreamAdapter(lambdaForStream))
             addDelegate(TopicAdapter())
         }
         binding.recyclerStream.adapter = adapter
-        binding.recyclerStream.layoutManager = LinearLayoutManager(context)
+        binding.recyclerStream.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         //binding.recyclerStream.addItemDecoration(StickyHeaderItemDecoration())
-        adapter.submitList(stubTopicList.concatenateWithStream(stubStreamList).toList())
-        Log.d("vnflbanvbdkfffffffffffffffff", adapter.currentList[10].id().toString())
+        adapter.submitList(stubStreamList.toDelegateList())
+
     }
 
     companion object {
@@ -75,6 +76,32 @@ class Streams : Fragment() {
             Topic(9, "Topic_9", Stream_5),
             Topic(10, "Topic_10", Stream_5)
         )
+    }
+
+    private val lambdaForStream = { stream: Stream ->
+        var filterTopicList = listOf<Topic>()
+        if (!stream.press) {
+            filterTopicList = stubTopicList.filter { topic ->
+                topic.stream == stream.name
+            }
+        }
+        filterTopicList = clearTopicList(stream, filterTopicList)
+        adapter.submitList(
+            filterTopicList.concatenateWithStream(stubStreamList).toList()
+        )
+    }
+
+    private fun clearTopicList(stream: Stream, filterTopicList: List<Topic>) : List<Topic> {
+        val newFilterList = filterTopicList.toMutableList()
+        adapter.currentList.forEach { delegate ->
+            if (delegate.content() as? Topic != null) {
+                val topicOld = delegate.content() as Topic
+                if (topicOld.stream != stream.name) {
+                    newFilterList.add(topicOld)
+                }
+            }
+        }
+        return newFilterList
     }
 
 

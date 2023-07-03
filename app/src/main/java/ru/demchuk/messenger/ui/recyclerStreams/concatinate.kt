@@ -11,18 +11,14 @@ fun List<Topic>.concatenateWithStream(streams : List<Stream>) :List<DelegateItem
 
     streams.forEach { stream ->
 
-        // Сразу добавляем в список дату
         delegateItemList.add(
            StreamDelegate(id = stream.id, stream = stream)
         )
 
         val streamName = stream.name
-        // Выбираем покупки по дате
         val allTopicStream = this.filter { topic ->
             topic.stream == streamName
         }
-        Log.d("bbbbbbkkkkkkkkkkkkkkkkkkkkk", allTopicStream[0].stream)
-        // Добавляем эти покупки
         allTopicStream.forEach { topic ->
             delegateItemList.add(
                 TopicDelegate(
@@ -31,7 +27,6 @@ fun List<Topic>.concatenateWithStream(streams : List<Stream>) :List<DelegateItem
                 )
             )
         }
-        Log.d("bbbbbb", delegateItemList[0].id().toString())
     }
     return delegateItemList
 

@@ -1,6 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.stream
 
-import ru.demchuk.messenger.ui.recyclerStreams.DelegateItem
+import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 
 class StreamDelegate(private val id: Int, private val stream: Stream) : DelegateItem {
     override fun content(): Any = stream

@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.StreamItemBinding
-import ru.demchuk.messenger.ui.recyclerStreams.AdapterDelegateStream
-import ru.demchuk.messenger.ui.recyclerStreams.DelegateItem
+import ru.demchuk.messenger.ui.adapterDelegate.AdapterDelegate
+import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 
-class StreamAdapter(val action : (Stream) -> Unit) : AdapterDelegateStream {
+class StreamAdapter(val action : (Stream) -> Unit) : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return ViewHolder(

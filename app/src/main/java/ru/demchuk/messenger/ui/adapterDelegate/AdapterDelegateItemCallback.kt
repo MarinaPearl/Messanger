@@ -1,10 +1,8 @@
-package ru.demchuk.messenger.ui.recyclerStreams
+package ru.demchuk.messenger.ui.adapterDelegate
 
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 
-class StreamAdapterItemCallback : DiffUtil.ItemCallback<DelegateItem>() {
+class AdapterDelegateItemCallback : DiffUtil.ItemCallback<DelegateItem>() {
 
     override fun areItemsTheSame(oldItem: DelegateItem, newItem: DelegateItem): Boolean {
         return oldItem::class == newItem::class && oldItem.id() == newItem.id()

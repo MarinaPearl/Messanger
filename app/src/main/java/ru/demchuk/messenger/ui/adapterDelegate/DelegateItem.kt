@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.ui.recyclerStreams
+package ru.demchuk.messenger.ui.adapterDelegate
 
 interface DelegateItem {
     fun content(): Any

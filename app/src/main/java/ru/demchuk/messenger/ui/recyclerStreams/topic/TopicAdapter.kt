@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.demchuk.messenger.databinding.TopicItemBinding
-import ru.demchuk.messenger.ui.recyclerStreams.AdapterDelegateStream
-import ru.demchuk.messenger.ui.recyclerStreams.DelegateItem
+import ru.demchuk.messenger.ui.adapterDelegate.AdapterDelegate
+import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 
-class TopicAdapter : AdapterDelegateStream {
+class TopicAdapter : AdapterDelegate {
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return ViewHolder(TopicItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }

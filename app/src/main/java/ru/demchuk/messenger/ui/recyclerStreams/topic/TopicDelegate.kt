@@ -1,6 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.topic
 
-import ru.demchuk.messenger.ui.recyclerStreams.DelegateItem
+import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 
 class TopicDelegate(private val id: Int, private val topic: Topic) : DelegateItem {
 

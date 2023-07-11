@@ -3,6 +3,7 @@
     <item
         android:id="@+id/icon_channels"
         android:enabled="true"
+        android:focusable="false"
         android:icon="@drawable/menu_item_channels"
         android:title="@string/menu_title_channels"/>
     <item

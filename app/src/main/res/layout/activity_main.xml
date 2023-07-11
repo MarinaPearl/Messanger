@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="ru.demchuk.messenger.ui.Streams"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentMain"
+        android:name="ru.demchuk.messenger.ui.BottomNavigationFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

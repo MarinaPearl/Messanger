@@ -1,14 +1,15 @@
-package ru.demchuk.messenger.ui.recyclerStreams
+package ru.demchuk.messenger.ui.adapterDelegate
 
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class MainAdapterStream : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(StreamAdapterItemCallback()) {
+class MainAdapterDelegate : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(
+    AdapterDelegateItemCallback()
+) {
 
-    private val listDelegate = mutableListOf<AdapterDelegateStream>()
+    private val listDelegate = mutableListOf<AdapterDelegate>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
      return listDelegate[viewType].onCreateViewHolder(parent)
@@ -18,7 +19,7 @@ class MainAdapterStream : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(Str
         listDelegate[getItemViewType(position)].onBindViewHolder(holder, getItem(position), position)
     }
 
-    fun addDelegate(delegate:AdapterDelegateStream) {
+    fun addDelegate(delegate: AdapterDelegate) {
         listDelegate.add(delegate)
     }
 

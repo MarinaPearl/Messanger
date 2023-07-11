@@ -28,7 +28,7 @@ class BottomNavigationFragment : Fragment() {
             val activity = activity as MainActivity
             when (it.itemId) {
                 R.id.icon_people -> {
-                    activity.router.navigateTo(MainActivity.Screens.Message())
+                    activity.routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.People())
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_channels -> {

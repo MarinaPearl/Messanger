@@ -8,7 +8,7 @@
 
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContent"
+        android:id="@+id/fragmentContentWithBottomNavigation"
         android:name="ru.demchuk.messenger.ui.StreamsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"

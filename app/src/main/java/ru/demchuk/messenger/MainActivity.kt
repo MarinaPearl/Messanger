@@ -5,8 +5,7 @@ import android.os.Bundle
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.demchuk.messenger.ui.DialogueFragment
-import ru.demchuk.messenger.ui.PeopleFragment
+import ru.demchuk.messenger.ui.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
         navigatorHolderFragmentBottomNavigation.setNavigator(navigatorFragmentBottomNavigation)
+        router.navigateTo(Screens.Search())
     }
 
     override fun onPause() {
@@ -40,6 +40,12 @@ class MainActivity : AppCompatActivity() {
     object Screens {
         fun Message() = FragmentScreen { DialogueFragment() }
         fun People() = FragmentScreen { PeopleFragment() }
+
+        fun Profile() = FragmentScreen { ProfileFragment() }
+
+        fun Streams() = FragmentScreen { StreamsFragment() }
+        fun Search() = FragmentScreen { SearchFragment() }
+
     }
 
 

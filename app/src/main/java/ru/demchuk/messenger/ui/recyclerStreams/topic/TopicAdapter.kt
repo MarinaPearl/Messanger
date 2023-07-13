@@ -7,9 +7,15 @@ import ru.demchuk.messenger.databinding.TopicItemBinding
 import ru.demchuk.messenger.ui.adapterDelegate.AdapterDelegate
 import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 
-class TopicAdapter : AdapterDelegate {
+class TopicAdapter(private val action: () -> Unit) : AdapterDelegate {
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return ViewHolder(TopicItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(
+            TopicItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(
@@ -23,10 +29,13 @@ class TopicAdapter : AdapterDelegate {
     override fun isOfViewType(item: DelegateItem): Boolean = item is TopicDelegate
 
 
-    class ViewHolder(private val bind : TopicItemBinding) : RecyclerView.ViewHolder(bind.root) {
+    inner class ViewHolder(private val bind: TopicItemBinding) : RecyclerView.ViewHolder(bind.root) {
 
-        fun bind(topic : Topic) {
+        fun bind(topic: Topic) {
             bind.topic.text = topic.name
+            bind.topic.setOnClickListener {
+                action()
+            }
         }
     }
 }

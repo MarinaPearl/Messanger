@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
 import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
@@ -36,7 +37,7 @@ class StreamsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter.apply {
             addDelegate(StreamAdapter(lambdaForStream))
-            addDelegate(TopicAdapter())
+            addDelegate(TopicAdapter(createActionForTopic()))
         }
         binding.recyclerStream.adapter = adapter
         binding.recyclerStream.layoutManager =
@@ -55,6 +56,11 @@ class StreamsFragment : Fragment() {
             viewModel.filterList(stream)
         }
         viewModel.clearList(adapter.currentList, stream)
+    }
+
+    private fun createActionForTopic(): () -> Unit = {
+        val activity = activity as MainActivity
+        activity.router.navigateTo(MainActivity.Screens.Message())
     }
 
 

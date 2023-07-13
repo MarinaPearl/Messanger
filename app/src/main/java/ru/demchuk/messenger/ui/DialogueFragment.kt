@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentDialogueBinding
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
@@ -60,7 +61,14 @@ class DialogueFragment : Fragment() {
         binding.recyclerDialogue.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.submitList(stubListMessage.concatenateWithDate(stubDatesList))
+    }
 
+    override fun onResume() {
+        super.onResume()
+        binding.backButton.setOnClickListener {
+            val activity = activity as MainActivity
+            activity.router.backTo(MainActivity.Screens.Streams())
+        }
     }
 
     companion object {

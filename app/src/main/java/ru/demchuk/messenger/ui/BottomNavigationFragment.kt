@@ -32,11 +32,11 @@ class BottomNavigationFragment : Fragment() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_channels -> {
-                    activity.router.navigateTo(MainActivity.Screens.Message())
+                    activity.router.navigateTo(MainActivity.Screens.Streams())
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_profile -> {
-                    activity.router.navigateTo(MainActivity.Screens.Message())
+                    activity.routerFragmentBottomNavigation.replaceScreen(MainActivity.Screens.Profile())
                     return@setOnItemSelectedListener true
                 }
             }

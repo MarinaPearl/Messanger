@@ -13,11 +13,8 @@ class MainActivity : AppCompatActivity() {
     val router get() = cicerone.router
     private val navigatorHolder get() = cicerone.getNavigatorHolder()
     private val navigator = AppNavigator(this, R.id.fragmentMain)
-    private val ciceroneFragmentBottomNavigation = Cicerone.create()
-    val routerFragmentBottomNavigation get() = ciceroneFragmentBottomNavigation.router
-    private val navigatorHolderFragmentBottomNavigation get() = ciceroneFragmentBottomNavigation.getNavigatorHolder()
-    private val navigatorFragmentBottomNavigation =
-        AppNavigator(this, R.id.fragmentContentWithBottomNavigation)
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +24,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
-        navigatorHolderFragmentBottomNavigation.setNavigator(navigatorFragmentBottomNavigation)
-        router.navigateTo(Screens.Search())
+       router.navigateTo(Screens.Search())
     }
 
     override fun onPause() {
         navigatorHolder.removeNavigator()
-        navigatorHolderFragmentBottomNavigation.removeNavigator()
         super.onPause()
     }
 
@@ -45,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         fun Streams() = FragmentScreen { StreamsFragment() }
         fun Search() = FragmentScreen { SearchFragment() }
+        fun ButtonNavigation(key : String) = FragmentScreen { BottomNavigationFragment(key) }
 
     }
 

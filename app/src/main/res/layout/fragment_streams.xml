@@ -7,6 +7,13 @@
     android:background="@color/grey_black"
     tools:context=".ui.StreamsFragment">
 
+    <include
+        android:id="@+id/search"
+        layout="@layout/fragment_search"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
@@ -16,7 +23,7 @@
         android:weightSum="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/search">
 
         <Button
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"

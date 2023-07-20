@@ -1,12 +1,20 @@
 package ru.demchuk.messenger.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
 import ru.demchuk.messenger.stubStreamList
@@ -39,9 +47,11 @@ class StreamsFragment : Fragment() {
             addDelegate(StreamAdapter(lambdaForStream))
             addDelegate(TopicAdapter(createActionForTopic()))
         }
+
         binding.recyclerStream.adapter = adapter
         binding.recyclerStream.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
         //binding.recyclerStream.addItemDecoration(StickyHeaderItemDecoration())
         adapter.submitList(stubStreamList.toDelegateList())
         viewModel.listFilterTopic.observe(this) {
@@ -49,7 +59,20 @@ class StreamsFragment : Fragment() {
                 it?.concatenateWithStream(stubStreamList)?.toList()
             )
         }
+        binding.search.editTextSearch.addTextChangedListener { it ->
+            lifecycleScope.launch {
+                viewModel.shared.emit(it.toString())
+            }
+        }
+
+
+        viewModel.state
+            .flowWithLifecycle(lifecycle)
+            .launchIn(lifecycleScope)
     }
+
+
+
 
     private val lambdaForStream = { stream: Stream ->
         if (!stream.press) {

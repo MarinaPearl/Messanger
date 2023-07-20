@@ -67,7 +67,7 @@ class DialogueFragment : Fragment() {
         super.onResume()
         binding.backButton.setOnClickListener {
             val activity = activity as MainActivity
-            activity.router.backTo(MainActivity.Screens.Streams())
+            activity.router.exit()
         }
     }
 

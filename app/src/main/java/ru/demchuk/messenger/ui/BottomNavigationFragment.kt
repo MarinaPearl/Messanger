@@ -1,7 +1,6 @@
 package ru.demchuk.messenger.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentBottomNavigationBinding
 
 
-class BottomNavigationFragment(val key: String) : Fragment() {
+class BottomNavigationFragment() : Fragment() {
 
     private lateinit var binding: FragmentBottomNavigationBinding
     private val ciceroneFragmentBottomNavigation = Cicerone.create()
@@ -45,11 +44,11 @@ class BottomNavigationFragment(val key: String) : Fragment() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_channels -> {
-                    activity.router.navigateTo(MainActivity.Screens.Search())
+                    routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.Streams())
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_profile -> {
-                    activity.router.navigateTo(MainActivity.Screens.ButtonNavigation( "profile"))
+                    routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.Profile())
                     return@setOnItemSelectedListener true
                 }
             }
@@ -59,15 +58,6 @@ class BottomNavigationFragment(val key: String) : Fragment() {
 
     override fun onResume() {
         navigatorHolderFragmentBottomNavigation.setNavigator(navigatorFragmentBottomNavigation)
-        when (key) {
-            "stream" -> {
-                routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.Streams())
-            }
-            "profile" -> {
-                routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.Profile())
-                binding.bottomNavigation.menu.getItem(2).isChecked = true
-            }
-        }
         super.onResume()
     }
 

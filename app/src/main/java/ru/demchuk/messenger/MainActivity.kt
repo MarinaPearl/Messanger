@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     private val navigator = AppNavigator(this, R.id.fragmentMain)
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
-       router.navigateTo(Screens.Search())
+        router.navigateTo(Screens.ButtonNavigation())
     }
 
     override fun onPause() {
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         fun Streams() = FragmentScreen { StreamsFragment() }
         fun Search() = FragmentScreen { SearchFragment() }
-        fun ButtonNavigation(key : String) = FragmentScreen { BottomNavigationFragment(key) }
+        fun ButtonNavigation() = FragmentScreen { BottomNavigationFragment() }
 
     }
 

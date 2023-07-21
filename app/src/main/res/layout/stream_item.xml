@@ -7,11 +7,6 @@
     app:cardBackgroundColor="#1E1E1E">
 
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -19,10 +14,9 @@
             <Button
                 android:id="@+id/stream"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
                 android:backgroundTint="#1E1E1E"
-                android:text="hello"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 tools:ignore="MissingConstraints" />
@@ -37,7 +31,6 @@
                 android:background="@drawable/item_open_topic"
                 tools:ignore="RelativeOverlap" />
         </RelativeLayout>
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
 
 </com.google.android.material.card.MaterialCardView>

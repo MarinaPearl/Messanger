@@ -7,11 +7,10 @@
         android:id="@+id/topic"
         android:layout_width="match_parent"
         android:backgroundTint="@color/blue_green"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:text="diolog"
         tools:ignore="MissingConstraints" />
 
 </com.google.android.material.card.MaterialCardView>

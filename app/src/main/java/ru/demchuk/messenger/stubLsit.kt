@@ -8,6 +8,7 @@ private const val Stream_2 = "Stream_2"
 private const val Stream_3 = "Stream_3"
 private const val Stream_4 = "Stream_4"
 private const val Stream_5 = "Stream_5"
+private const val Stream_6 = "mama"
 
 val stubStreamList = listOf(
     Stream(1, Stream_1),
@@ -15,6 +16,7 @@ val stubStreamList = listOf(
     Stream(3, Stream_3),
     Stream(4, Stream_4),
     Stream(5, Stream_5),
+    Stream(5, Stream_6),
 )
 
 val stubTopicList = listOf(

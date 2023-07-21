@@ -11,4 +11,6 @@
     <color name="grey_black">#1E1E1E</color>
     <color name="black_blackGrey">#121212</color>
     <color name="neon_green">#4AB54D</color>
+    <color name="grey_white">#282828</color>
+    <color name="grey_transparent">#55808080</color>в
 </resources>

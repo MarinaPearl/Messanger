@@ -3,10 +3,11 @@ package ru.demchuk.messenger.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -39,7 +40,8 @@ class StreamsFragment : Fragment() {
     private lateinit var binding: FragmentStreamsBinding
     private val adapter: MainAdapterDelegate by lazy { MainAdapterDelegate() }
     private val viewModel: StreamViewModel by viewModels()
-    private val snackBar : Snackbar by lazy {
+    private var actualStateStreamList = stubStreamList
+    private val snackBar: Snackbar by lazy {
         val snackBar = Snackbar.make(
             binding.root,
             "Ошибка при загрузке стримов",
@@ -69,34 +71,38 @@ class StreamsFragment : Fragment() {
             addDelegate(StreamAdapter(lambdaForStream))
             addDelegate(TopicAdapter(createActionForTopic()))
         }
-
         binding.shimmer.isVisible = false
         binding.recyclerStream.adapter = adapter
         binding.recyclerStream.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         //binding.recyclerStream.addItemDecoration(StickyHeaderItemDecoration())
-        adapter.submitList(stubStreamList.toDelegateList())
+        if (viewModel.listFilterTopic.value?.isEmpty() == null) {
+            lifecycleScope.launch {
+                viewModel.loadStreams()
+            }
+        }
         viewModel.listFilterTopic.observe(this) {
             adapter.submitList(
-                it?.concatenateWithStream(stubStreamList)?.toList()
+                it?.concatenateWithStream(actualStateStreamList)?.toList()
             )
         }
         binding.search.editTextSearch.addTextChangedListener {
             lifecycleScope.launch {
-                it?.let { query -> viewModel.searchQueryState.emit(query.toString()) }
+                it?.let { query ->
+                    viewModel.searchQueryState.emit(query.toString())
+                }
             }
+
         }
-
-
         viewModel.searchState
             .flowWithLifecycle(lifecycle)
             .onEach(::setScreen)
             .launchIn(lifecycleScope)
     }
 
-
     private val lambdaForStream = { stream: Stream ->
+        binding.search.editTextSearch.clearFocus()
         if (!stream.press) {
             viewModel.filterList(stream)
         }
@@ -107,7 +113,6 @@ class StreamsFragment : Fragment() {
         val activity = activity as MainActivity
         activity.router.navigateTo(MainActivity.Screens.Message())
     }
-
 
 
     private fun setScreen(state: ScreenState) {
@@ -130,11 +135,18 @@ class StreamsFragment : Fragment() {
                     recyclerStream.isVisible = true
                     shimmer.isVisible = false
                 }
-                adapter.submitList(state.list.toDelegateList())
+                actualStateStreamList = state.list
+                if (viewModel.listFilterTopic.value?.isEmpty() == null) {
+                    adapter.submitList(state.list.toDelegateList())
+                } else {
+                    adapter.submitList(
+                        viewModel.listFilterTopic.value?.concatenateWithStream(actualStateStreamList)
+                            ?.toList()
+                    )
+                }
             }
             ScreenState.Init -> {}
         }
-
     }
 
 

@@ -1,5 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams
 
+import android.util.Log
 import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamDelegate

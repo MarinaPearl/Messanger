@@ -32,10 +32,10 @@ class TopicAdapter(private val action: () -> Unit) : AdapterDelegate {
     inner class ViewHolder(private val bind: TopicItemBinding) : RecyclerView.ViewHolder(bind.root) {
 
         fun bind(topic: Topic) {
-//            bind.topic.text = topic.name
-//            bind.topic.setOnClickListener {
-//                action()
-//            }
+            bind.topic.text = topic.name
+            bind.topic.setOnClickListener {
+                action()
+            }
         }
     }
 }

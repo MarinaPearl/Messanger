@@ -18,12 +18,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        if (savedInstanceState == null) {
+            router.navigateTo(Screens.ButtonNavigation())
+        }
     }
 
     override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
-        router.navigateTo(Screens.ButtonNavigation())
     }
 
     override fun onPause() {

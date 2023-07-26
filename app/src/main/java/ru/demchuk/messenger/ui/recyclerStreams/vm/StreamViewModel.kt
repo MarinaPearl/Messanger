@@ -1,10 +1,14 @@
 package ru.demchuk.messenger.ui.recyclerStreams.vm
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.stubTopicList
 import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
@@ -31,14 +35,27 @@ class StreamViewModel : ViewModel() {
 
     private fun subscribeToSearchQueryChanges() {
         searchQueryState
-            .filter { it.isNotEmpty() }
-            .distinctUntilChanged()
             .debounce(500L)
-            .flatMapLatest { flow { emit(search(it)) } }
+            .onEach { println(it) }
+            .distinctUntilChanged()
+            .flatMapLatest { flow { emit(search(it)) }}
             .onEach { _searchState.value = it }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
+    }
 
+    suspend fun loadStreams() {
+        _searchState.emit(ScreenState.Loading)
+        var listResult = listOf<Stream>()
+        coroutineScope {
+            launch(Dispatchers.IO) {
+                delay(2000L)
+                listResult = stubStreamList
+            }
+        }
+        if (listResult.isNotEmpty()) {
+            _searchState.value = ScreenState.Data(listResult)
+        } else _searchState.value = ScreenState.Error
     }
 
 
@@ -47,14 +64,15 @@ class StreamViewModel : ViewModel() {
         var listResult = listOf<Stream>()
         coroutineScope {
             launch(Dispatchers.IO) {
-                delay(3000L)
-                listResult = searchList(request)
+                delay(2000L)
+                listResult = if (request.isNotEmpty()) {
+                    searchList(request)
+                } else stubStreamList
             }
         }
         return if (listResult.isNotEmpty()) {
             ScreenState.Data(listResult)
         } else ScreenState.Error
-
     }
 
     fun filterList(stream: Stream) {
@@ -63,11 +81,11 @@ class StreamViewModel : ViewModel() {
         }
     }
 
-    private suspend fun searchList(request: String): List<Stream> {
+    private fun searchList(request: String): List<Stream> {
         val resulListSearch: MutableList<Stream> = mutableListOf()
-        delay(500L)
         stubStreamList.forEach {
-            if (it.name == request) {
+            val regex = request.toRegex(RegexOption.IGNORE_CASE)
+            if (regex.containsMatchIn(it.name)) {
                 resulListSearch.add(it)
             }
         }

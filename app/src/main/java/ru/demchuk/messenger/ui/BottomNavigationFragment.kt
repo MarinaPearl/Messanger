@@ -1,6 +1,7 @@
 package ru.demchuk.messenger.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,8 +31,12 @@ class BottomNavigationFragment() : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if (savedInstanceState == null) {
+            routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.Streams())
+        }
         binding = FragmentBottomNavigationBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

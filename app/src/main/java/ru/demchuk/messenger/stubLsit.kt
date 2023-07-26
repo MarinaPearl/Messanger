@@ -16,7 +16,7 @@ val stubStreamList = listOf(
     Stream(3, Stream_3),
     Stream(4, Stream_4),
     Stream(5, Stream_5),
-    Stream(5, Stream_6),
+    Stream(6, Stream_6),
 )
 
 val stubTopicList = listOf(

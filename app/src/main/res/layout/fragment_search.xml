@@ -29,6 +29,7 @@
              android:id="@+id/editTextSearch"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             android:imeOptions="flagNoExtractUi"
              android:layout_marginStart="15dp"
              android:autofillHints="true"
              android:background="@color/black_blackGrey"

@@ -1,20 +1,17 @@
 package ru.demchuk.messenger.ui.recyclerStreams.vm
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.stubTopicList
 import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
+import ru.demchuk.messenger.ui.exception.runCatchingNonCancellation
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.topic.Topic
 import ru.demchuk.messenger.ui.state.ScreenState
+import ru.demchuk.messenger.use_case.LoadStreams
 
 class StreamViewModel : ViewModel() {
 
@@ -38,7 +35,7 @@ class StreamViewModel : ViewModel() {
             .debounce(500L)
             .onEach { println(it) }
             .distinctUntilChanged()
-            .flatMapLatest { flow { emit(search(it)) }}
+            .flatMapLatest { flow { emit(search(it)) } }
             .onEach { _searchState.value = it }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
@@ -46,33 +43,25 @@ class StreamViewModel : ViewModel() {
 
     suspend fun loadStreams() {
         _searchState.emit(ScreenState.Loading)
-        var listResult = listOf<Stream>()
-        coroutineScope {
-            launch(Dispatchers.IO) {
-                delay(2000L)
-                listResult = stubStreamList
-            }
+        val result = runCatchingNonCancellation {
+            loadStreams { LoadStreams.loadAllStreams() }
+        }.getOrNull()
+        _searchState.value = if (result != null) {
+            ScreenState.Data(result)
+        } else {
+            ScreenState.Error
         }
-        if (listResult.isNotEmpty()) {
-            _searchState.value = ScreenState.Data(listResult)
-        } else _searchState.value = ScreenState.Error
+
     }
 
 
     private suspend fun search(request: String): ScreenState {
         _searchState.emit(ScreenState.Loading)
-        var listResult = listOf<Stream>()
-        coroutineScope {
-            launch(Dispatchers.IO) {
-                delay(2000L)
-                listResult = if (request.isNotEmpty()) {
-                    searchList(request)
-                } else stubStreamList
-            }
-        }
-        return if (listResult.isNotEmpty()) {
-            ScreenState.Data(listResult)
-        } else ScreenState.Error
+        val result = runCatchingNonCancellation {
+            loadStreams { LoadStreams.loadStreamsForRequest(request) }
+        }.getOrNull()
+        return result?.let { ScreenState.Data(it) }
+            ?: ScreenState.Error
     }
 
     fun filterList(stream: Stream) {
@@ -80,18 +69,6 @@ class StreamViewModel : ViewModel() {
             topic.stream == stream.name
         }
     }
-
-    private fun searchList(request: String): List<Stream> {
-        val resulListSearch: MutableList<Stream> = mutableListOf()
-        stubStreamList.forEach {
-            val regex = request.toRegex(RegexOption.IGNORE_CASE)
-            if (regex.containsMatchIn(it.name)) {
-                resulListSearch.add(it)
-            }
-        }
-        return resulListSearch
-    }
-
     fun clearList(list: List<DelegateItem>, stream: Stream) {
         val newFilterList = listFilterTopic.value?.toMutableSet()
         list.forEach { delegate ->

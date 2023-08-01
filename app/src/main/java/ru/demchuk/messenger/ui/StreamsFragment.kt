@@ -17,12 +17,20 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
+import ru.demchuk.messenger.model.AuthorizationInterceptor
+import ru.demchuk.messenger.model.api.ZulipApi
+import ru.demchuk.messenger.model.`object`.UserHolder
 import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
 import ru.demchuk.messenger.ui.recyclerStreams.concatenateWithStream
@@ -99,6 +107,25 @@ class StreamsFragment : Fragment() {
             .flowWithLifecycle(lifecycle)
             .onEach(::setScreen)
             .launchIn(lifecycleScope)
+
+        val interceptor = AuthorizationInterceptor(UserHolder())
+        val interceptorLogger = HttpLoggingInterceptor()
+        interceptorLogger.level = HttpLoggingInterceptor.Level.BODY
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .addInterceptor(interceptorLogger)
+            .build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("/").client(client)
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        val mainApi = retrofit.create(ZulipApi::class.java)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = mainApi.getAllStreams()
+            result.listStreams.forEach {
+                Log.d("aaaaaaaaaaaaaaaaaaaaaaaaas", it.name)
+            }
+        }
     }
 
     private val lambdaForStream = { stream: Stream ->

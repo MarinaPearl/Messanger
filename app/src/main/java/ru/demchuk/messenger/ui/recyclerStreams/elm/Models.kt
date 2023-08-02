@@ -1,15 +1,13 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
-import android.os.Parcel
-import android.os.Parcelable
-import ru.demchuk.messenger.data.`object`.Streams
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 
 
 data class State(
     val shimmerShow : Boolean = false,
     val errorShow : Boolean = false,
     val recyclerViewShow : Boolean = false,
-    val listStreams : List<Streams>? = null,
+    val listStreams : List<StreamModelUseCase>? = null,
     )
 
 
@@ -22,7 +20,7 @@ sealed class Event {
 
     sealed class Internal : Event() {
 
-        data class StreamsLoaded(val items: List<Streams>) : Internal()
+        data class StreamsLoaded(val items: List<StreamModelUseCase>) : Internal()
 
         data class ErrorLoading(val error: Throwable) : Internal()
     }

@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.data.`object`
+package ru.demchuk.messenger.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

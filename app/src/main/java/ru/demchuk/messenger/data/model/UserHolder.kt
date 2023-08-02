@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.data.`object`
+package ru.demchuk.messenger.data.model
 
 data class UserHolder(
     val idUser: Int= 604766,

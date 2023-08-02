@@ -2,21 +2,16 @@ package ru.demchuk.messenger.ui.recyclerStreams
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
@@ -30,6 +25,7 @@ import ru.demchuk.messenger.ui.recyclerStreams.elm.StoreFactory
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.vm.StreamViewModel
 import ru.demchuk.messenger.ui.state.ScreenState
 import vivid.money.elmslie.android.base.ElmFragment
@@ -104,20 +100,30 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
 //            .launchIn(lifecycleScope)
 //        binding.subscribedStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingSubscribedStreams) }
     }
+
     override fun createStore(): Store<Event, Effect, State> =
         StoreFactory.provide()
 
     override fun render(state: State) {
-           binding.apply {
-               shimmer.isVisible = state.shimmerShow
-               recyclerStream.isVisible = state.recyclerViewShow
-               if (state.errorShow) {
-                   snackBar.show()
-               }
-               state.listStreams?.forEach {
-                   Log.d("nnnnnnnnnnnnnnn", it.name)
-               }
-           }
+        binding.apply {
+            shimmer.isVisible = state.shimmerShow
+            recyclerStream.isVisible = state.recyclerViewShow
+            if (state.errorShow) {
+                snackBar.show()
+            }
+            if (state.listStreams != null) {
+                adapter.submitList(state.listStreams.toListStreamOnUi().toDelegateList())
+            }
+        }
+    }
+
+    private fun List<StreamModelUseCase>.toListStreamOnUi(): List<Stream> {
+        val listStreamUi = mutableListOf<Stream>()
+        this.forEach {
+            val streamUi = Stream(id = it.streamId, name = it.name)
+            listStreamUi.add(streamUi)
+        }
+        return listStreamUi
     }
 
     private val lambdaForStream = { stream: Stream ->

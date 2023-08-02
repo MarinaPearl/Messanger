@@ -7,7 +7,7 @@ object Reducer : DslReducer<Event, State, Effect, Command>() {
     override fun Result.reduce(event: Event) = when (event) {
         is Event.Ui.LoadingSubscribedStreams -> {
             state { copy(shimmerShow = true, errorShow = false, recyclerViewShow = false) }
-            commands { +Command.LoadStreams }
+            commands { +Command.LoadStreams(event.userRequestUseCase) }
         }
         is Event.Internal.StreamsLoaded -> {
             state { copy(shimmerShow = false, errorShow = false, recyclerViewShow = true, listStreams = event.items) }

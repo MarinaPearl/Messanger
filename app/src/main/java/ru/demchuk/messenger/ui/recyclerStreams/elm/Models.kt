@@ -1,5 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 
 
@@ -15,7 +16,7 @@ sealed class Event {
     sealed class Ui : Event() {
         class SearchStreamsOnScreen(val query: String) : Ui()
         object LoadingAllStreams : Ui()
-        object LoadingSubscribedStreams : Ui()
+        class LoadingSubscribedStreams(val userRequestUseCase: UserRequestUseCase) : Ui()
     }
 
     sealed class Internal : Event() {
@@ -27,7 +28,7 @@ sealed class Event {
 }
 
 sealed class Command {
-    object LoadStreams : Command()
+    class LoadStreams(val userRequestUseCase: UserRequestUseCase) : Command()
 }
 
 sealed class Effect {

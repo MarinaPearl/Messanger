@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
+import ru.demchuk.messenger.data.repository.UserRequestSubscribedStreams
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
 import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
@@ -22,9 +23,12 @@ import ru.demchuk.messenger.ui.recyclerStreams.elm.Effect
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Event
 import ru.demchuk.messenger.ui.recyclerStreams.elm.State
 import ru.demchuk.messenger.ui.recyclerStreams.elm.StoreFactory
+import ru.demchuk.messenger.ui.recyclerStreams.repository.UserRequestRepository
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.UseCaseUserRequestAllSubscribed
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.vm.StreamViewModel
 import ru.demchuk.messenger.ui.state.ScreenState
@@ -54,8 +58,11 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         )
         snackBar.setActionTextColor(R.color.grey_black)
     }
+    private val repoSubscribedStreams : UserRequestRepository = UserRequestSubscribedStreams()
+    private val useCaseSubscribedStreams : UserRequestUseCase = UseCaseUserRequestAllSubscribed(
+        repoSubscribedStreams)
 
-    override val initEvent: Event = Event.Ui.LoadingSubscribedStreams
+    override val initEvent: Event = Event.Ui.LoadingSubscribedStreams(useCaseSubscribedStreams)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

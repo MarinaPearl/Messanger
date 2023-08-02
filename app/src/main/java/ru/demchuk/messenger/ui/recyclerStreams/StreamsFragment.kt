@@ -1,13 +1,11 @@
-package ru.demchuk.messenger.ui
+package ru.demchuk.messenger.ui.recyclerStreams
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -17,33 +15,29 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
-import ru.demchuk.messenger.model.AuthorizationInterceptor
-import ru.demchuk.messenger.model.api.ZulipApi
-import ru.demchuk.messenger.model.`object`.UserHolder
 import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
-import ru.demchuk.messenger.ui.recyclerStreams.concatenateWithStream
+import ru.demchuk.messenger.ui.recyclerStreams.elm.Effect
+import ru.demchuk.messenger.ui.recyclerStreams.elm.Event
+import ru.demchuk.messenger.ui.recyclerStreams.elm.State
+import ru.demchuk.messenger.ui.recyclerStreams.elm.StoreFactory
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
-import ru.demchuk.messenger.ui.recyclerStreams.toDelegateList
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.vm.StreamViewModel
 import ru.demchuk.messenger.ui.state.ScreenState
+import vivid.money.elmslie.android.base.ElmFragment
+import vivid.money.elmslie.core.store.Store
 
 
 @SuppressLint("ResourceAsColor")
-class StreamsFragment : Fragment() {
+class StreamsFragment : ElmFragment<Event, Effect, State>() {
 
     private lateinit var binding: FragmentStreamsBinding
     private val adapter: MainAdapterDelegate by lazy { MainAdapterDelegate() }
@@ -65,6 +59,8 @@ class StreamsFragment : Fragment() {
         snackBar.setActionTextColor(R.color.grey_black)
     }
 
+    override val initEvent: Event = Event.Ui.LoadingSubscribedStreams
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,22 +75,21 @@ class StreamsFragment : Fragment() {
             addDelegate(StreamAdapter(lambdaForStream))
             addDelegate(TopicAdapter(createActionForTopic()))
         }
-        binding.shimmer.isVisible = false
         binding.recyclerStream.adapter = adapter
         binding.recyclerStream.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         //binding.recyclerStream.addItemDecoration(StickyHeaderItemDecoration())
-        if (viewModel.listFilterTopic.value?.isEmpty() == null) {
-            lifecycleScope.launch {
-                viewModel.loadStreams()
-            }
-        }
-        viewModel.listFilterTopic.observe(this) {
-            adapter.submitList(
-                it?.concatenateWithStream(actualStateStreamList)?.toList()
-            )
-        }
+//        if (viewModel.listFilterTopic.value?.isEmpty() == null) {
+//            lifecycleScope.launch {
+//                viewModel.loadStreams()
+//            }
+//        }
+//        viewModel.listFilterTopic.observe(this) {
+//            adapter.submitList(
+//                it?.concatenateWithStream(actualStateStreamList)?.toList()
+//            )
+//        }
         binding.search.editTextSearch.addTextChangedListener {
             lifecycleScope.launch {
                 it?.let { query ->
@@ -103,29 +98,26 @@ class StreamsFragment : Fragment() {
             }
 
         }
-        viewModel.searchState
-            .flowWithLifecycle(lifecycle)
-            .onEach(::setScreen)
-            .launchIn(lifecycleScope)
+//        viewModel.searchState
+//            .flowWithLifecycle(lifecycle)
+//            .onEach(::setScreen)
+//            .launchIn(lifecycleScope)
+//        binding.subscribedStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingSubscribedStreams) }
+    }
+    override fun createStore(): Store<Event, Effect, State> =
+        StoreFactory.provide()
 
-        val interceptor = AuthorizationInterceptor(UserHolder())
-        val interceptorLogger = HttpLoggingInterceptor()
-        interceptorLogger.level = HttpLoggingInterceptor.Level.BODY
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .addInterceptor(interceptorLogger)
-            .build()
-        val retrofit = Retrofit.Builder()
-            .baseUrl("/").client(client)
-            .addConverterFactory(GsonConverterFactory.create()).build()
-        val mainApi = retrofit.create(ZulipApi::class.java)
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = mainApi.getAllStreams()
-            result.listStreams.forEach {
-                Log.d("aaaaaaaaaaaaaaaaaaaaaaaaas", it.name)
-            }
-        }
+    override fun render(state: State) {
+           binding.apply {
+               shimmer.isVisible = state.shimmerShow
+               recyclerStream.isVisible = state.recyclerViewShow
+               if (state.errorShow) {
+                   snackBar.show()
+               }
+               state.listStreams?.forEach {
+                   Log.d("nnnnnnnnnnnnnnn", it.name)
+               }
+           }
     }
 
     private val lambdaForStream = { stream: Stream ->

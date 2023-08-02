@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.ui
+package ru.demchuk.messenger.ui.dialogue
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,7 +12,6 @@ import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentDialogueBinding
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
-import ru.demchuk.messenger.ui.dialogue.concatenateWithDate
 import ru.demchuk.messenger.ui.dialogue.data.DateAdapter
 import ru.demchuk.messenger.ui.dialogue.data.DateModel
 import ru.demchuk.messenger.ui.dialogue.message.MessageAdapter

@@ -6,6 +6,9 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import ru.demchuk.messenger.ui.*
+import ru.demchuk.messenger.ui.dialogue.DialogueFragment
+import ru.demchuk.messenger.ui.people.PeopleFragment
+import ru.demchuk.messenger.ui.recyclerStreams.StreamsFragment
 
 class MainActivity : AppCompatActivity() {
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/grey_black"
     android:id="@+id/rootLayoutStreams"
-    tools:context=".ui.StreamsFragment">
+    tools:context=".ui.recyclerStreams.StreamsFragment">
 
     <include
         android:id="@+id/search"
@@ -27,6 +27,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search">
 
         <Button
+            android:id="@+id/subscribedStreamButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -36,6 +37,7 @@
             android:textSize="15sp" />
 
         <Button
+            android:id="@+id/allStreamButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

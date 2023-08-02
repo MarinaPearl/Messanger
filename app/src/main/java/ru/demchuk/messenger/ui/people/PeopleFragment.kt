@@ -1,15 +1,12 @@
-package ru.demchuk.messenger.ui
+package ru.demchuk.messenger.ui.people
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.demchuk.messenger.databinding.FragmentPeopleBinding
-import ru.demchuk.messenger.ui.people.Adapter
-import ru.demchuk.messenger.ui.people.PeopleModel
 
 
 class PeopleFragment : Fragment() {

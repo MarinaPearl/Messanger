@@ -1,9 +1,9 @@
-package ru.demchuk.messenger.model
+package ru.demchuk.messenger.data
 
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.demchuk.messenger.model.`object`.UserHolder
+import ru.demchuk.messenger.data.`object`.UserHolder
 
 class AuthorizationInterceptor(private val userHolder: UserHolder) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

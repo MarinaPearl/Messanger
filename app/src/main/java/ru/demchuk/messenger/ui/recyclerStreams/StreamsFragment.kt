@@ -15,9 +15,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
-import ru.demchuk.messenger.data.repository.UserRequestSubscribedStreams
+import ru.demchuk.messenger.data.repository.UserRequestAllStreams
+import ru.demchuk.messenger.data.repository.UserRequestSubscribesStreams
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
-import ru.demchuk.messenger.stubStreamList
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Effect
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Event
@@ -27,11 +27,10 @@ import ru.demchuk.messenger.ui.recyclerStreams.repository.UserRequestRepository
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.UseCaseUserRequestAllSubscribed
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.UseCaseUserAnswerRequest
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.vm.StreamViewModel
-import ru.demchuk.messenger.ui.state.ScreenState
 import vivid.money.elmslie.android.base.ElmFragment
 import vivid.money.elmslie.core.store.Store
 
@@ -42,7 +41,6 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
     private lateinit var binding: FragmentStreamsBinding
     private val adapter: MainAdapterDelegate by lazy { MainAdapterDelegate() }
     private val viewModel: StreamViewModel by viewModels()
-    private var actualStateStreamList = stubStreamList
     private val snackBar: Snackbar by lazy {
         val snackBar = Snackbar.make(
             binding.root,
@@ -58,11 +56,16 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         )
         snackBar.setActionTextColor(R.color.grey_black)
     }
-    private val repoSubscribedStreams : UserRequestRepository = UserRequestSubscribedStreams()
-    private val useCaseSubscribedStreams : UserRequestUseCase = UseCaseUserRequestAllSubscribed(
-        repoSubscribedStreams)
+    private val repoAllStreams: UserRequestRepository = UserRequestAllStreams()
+    private val useCaseAllStreams: UserRequestUseCase = UseCaseUserAnswerRequest(
+        repoAllStreams
+    )
+    private val repoSubscribedStreams: UserRequestRepository = UserRequestSubscribesStreams()
+    private val useCaseSubscribedStreams: UserRequestUseCase = UseCaseUserAnswerRequest(
+        repoSubscribedStreams
+    )
 
-    override val initEvent: Event = Event.Ui.LoadingSubscribedStreams(useCaseSubscribedStreams)
+    override val initEvent: Event = Event.Ui.LoadingStreams(useCaseSubscribedStreams)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,31 +84,15 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         binding.recyclerStream.adapter = adapter
         binding.recyclerStream.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-        //binding.recyclerStream.addItemDecoration(StickyHeaderItemDecoration())
-//        if (viewModel.listFilterTopic.value?.isEmpty() == null) {
-//            lifecycleScope.launch {
-//                viewModel.loadStreams()
-//            }
-//        }
-//        viewModel.listFilterTopic.observe(this) {
-//            adapter.submitList(
-//                it?.concatenateWithStream(actualStateStreamList)?.toList()
-//            )
-//        }
         binding.search.editTextSearch.addTextChangedListener {
             lifecycleScope.launch {
                 it?.let { query ->
                     viewModel.searchQueryState.emit(query.toString())
                 }
             }
-
         }
-//        viewModel.searchState
-//            .flowWithLifecycle(lifecycle)
-//            .onEach(::setScreen)
-//            .launchIn(lifecycleScope)
-//        binding.subscribedStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingSubscribedStreams) }
+        binding.allStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingStreams(useCaseAllStreams))}
+        binding.subscribedStreamButton.setOnClickListener {store.accept(Event.Ui.LoadingStreams(useCaseSubscribedStreams))}
     }
 
     override fun createStore(): Store<Event, Effect, State> =
@@ -113,7 +100,7 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
 
     override fun render(state: State) {
         binding.apply {
-            shimmer.isVisible = state.shimmerShow
+            progressBar.isVisible = state.progressBarShow
             recyclerStream.isVisible = state.recyclerViewShow
             if (state.errorShow) {
                 snackBar.show()
@@ -145,41 +132,5 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         val activity = activity as MainActivity
         activity.router.navigateTo(MainActivity.Screens.Message())
     }
-
-
-    private fun setScreen(state: ScreenState) {
-        when (state) {
-            ScreenState.Error -> {
-                binding.apply {
-                    recyclerStream.isVisible = false
-                    shimmer.isVisible = false
-                }
-                snackBar.show()
-            }
-            ScreenState.Loading -> {
-                binding.apply {
-                    recyclerStream.isVisible = false
-                    shimmer.isVisible = true
-                }
-            }
-            is ScreenState.Data -> {
-                binding.apply {
-                    recyclerStream.isVisible = true
-                    shimmer.isVisible = false
-                }
-                actualStateStreamList = state.list
-                if (viewModel.listFilterTopic.value?.isEmpty() == null) {
-                    adapter.submitList(state.list.toDelegateList())
-                } else {
-                    adapter.submitList(
-                        viewModel.listFilterTopic.value?.concatenateWithStream(actualStateStreamList)
-                            ?.toList()
-                    )
-                }
-            }
-            ScreenState.Init -> {}
-        }
-    }
-
 
 }

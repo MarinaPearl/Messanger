@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AllStreams(
-    @SerialName("streams")
-    var listStreams: List<Stream>
+data class SubscriptionStreams(
+    @SerialName("subscriptions")
+    val subscriptions: List<Stream>
 )

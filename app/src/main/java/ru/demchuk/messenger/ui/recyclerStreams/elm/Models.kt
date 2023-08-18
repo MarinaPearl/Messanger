@@ -15,6 +15,7 @@ data class State(
 sealed class Event {
     sealed class Ui : Event() {
         class SearchStreamsOnScreen(val query: String) : Ui()
+        class Init(val userRequestUseCase: UserRequestUseCase) : Ui()
         class LoadingStreams(val userRequestUseCase: UserRequestUseCase) : Ui()
     }
 
@@ -28,8 +29,10 @@ sealed class Event {
 
 sealed class Command {
     class LoadStreams(val userRequestUseCase: UserRequestUseCase) : Command()
+
 }
 
 sealed class Effect {
     data class NextPageLoadError(val error: Throwable) : Effect()
+
 }

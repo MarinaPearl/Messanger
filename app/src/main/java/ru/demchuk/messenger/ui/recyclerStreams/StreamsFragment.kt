@@ -15,20 +15,16 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
-import ru.demchuk.messenger.data.repository.UserRequestAllStreams
-import ru.demchuk.messenger.data.repository.UserRequestSubscribesStreams
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
+import ru.demchuk.messenger.di.GlobalDi
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Effect
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Event
 import ru.demchuk.messenger.ui.recyclerStreams.elm.State
 import ru.demchuk.messenger.ui.recyclerStreams.elm.StoreFactory
-import ru.demchuk.messenger.ui.recyclerStreams.repository.UserRequestRepository
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.UseCaseUserAnswerRequest
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.vm.StreamViewModel
 import vivid.money.elmslie.android.base.ElmFragment
@@ -56,16 +52,9 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         )
         snackBar.setActionTextColor(R.color.grey_black)
     }
-    private val repoAllStreams: UserRequestRepository = UserRequestAllStreams()
-    private val useCaseAllStreams: UserRequestUseCase = UseCaseUserAnswerRequest(
-        repoAllStreams
-    )
-    private val repoSubscribedStreams: UserRequestRepository = UserRequestSubscribesStreams()
-    private val useCaseSubscribedStreams: UserRequestUseCase = UseCaseUserAnswerRequest(
-        repoSubscribedStreams
-    )
 
-    override val initEvent: Event = Event.Ui.LoadingStreams(useCaseSubscribedStreams)
+
+    override val initEvent: Event = Event.Ui.Init
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,16 +76,17 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         binding.search.editTextSearch.addTextChangedListener {
             lifecycleScope.launch {
                 it?.let { query ->
-                    viewModel.searchQueryState.emit(query.toString())
+                    //viewModel.searchQueryState.emit(query.toString())
+                    store.accept(Event.Ui.SearchStreams(query.toString()))
                 }
             }
         }
-        binding.allStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingStreams(useCaseAllStreams))}
-        binding.subscribedStreamButton.setOnClickListener {store.accept(Event.Ui.LoadingStreams(useCaseSubscribedStreams))}
+        binding.allStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingAllStreams)}
+        binding.subscribedStreamButton.setOnClickListener {store.accept(Event.Ui.LoadingSubscribedStreams)}
     }
 
     override fun createStore(): Store<Event, Effect, State> =
-        StoreFactory.provide()
+        GlobalDi.INSTANCE.storeFactory.provide()
 
     override fun render(state: State) {
         binding.apply {

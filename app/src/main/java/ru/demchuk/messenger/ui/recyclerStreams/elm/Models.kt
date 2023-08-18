@@ -1,6 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
+import kotlinx.coroutines.CoroutineScope
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 
 
@@ -14,9 +14,10 @@ data class State(
 
 sealed class Event {
     sealed class Ui : Event() {
-        class SearchStreamsOnScreen(val query: String) : Ui()
-        class Init(val userRequestUseCase: UserRequestUseCase) : Ui()
-        class LoadingStreams(val userRequestUseCase: UserRequestUseCase) : Ui()
+        class SearchStreams(val query: String) : Ui()
+        object Init : Ui()
+        object LoadingAllStreams : Ui()
+        object LoadingSubscribedStreams : Ui()
     }
 
     sealed class Internal : Event() {
@@ -24,11 +25,17 @@ sealed class Event {
         data class StreamsLoaded(val items: List<StreamModelUseCase>) : Internal()
 
         data class ErrorLoading(val error: Throwable) : Internal()
+
+        object Init : Internal()
     }
 }
 
 sealed class Command {
-    class LoadStreams(val userRequestUseCase: UserRequestUseCase) : Command()
+    object LoadAllStreams : Command()
+    object LoadSubscribedStreams : Command()
+    object Init : Command()
+
+    class SearchStream(val query: String) : Command()
 
 }
 

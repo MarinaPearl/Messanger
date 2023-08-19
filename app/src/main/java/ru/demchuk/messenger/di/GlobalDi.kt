@@ -8,6 +8,7 @@ import ru.demchuk.messenger.data.storage.dataBase.ZulipSubscribedStreams
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Actor
 import ru.demchuk.messenger.ui.recyclerStreams.elm.StoreFactory
 import ru.demchuk.messenger.ui.recyclerStreams.repository.UserRequestStreamsRepository
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestSearchStreamsUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestStreamsUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
 
@@ -29,14 +30,41 @@ class GlobalDi private constructor() {
         )
     }
 
-    private val requestAllStreamsUseCase : UserRequestUseCase by lazy {UserRequestStreamsUseCase(requestAllStreamsRepository)}
+    private val requestAllStreamsUseCase: UserRequestUseCase by lazy {
+        UserRequestStreamsUseCase(
+            requestAllStreamsRepository
+        )
+    }
 
-    private val requestSubscribedStreamsUseCase : UserRequestUseCase by lazy {UserRequestStreamsUseCase(requestSubscribedStreamsRepository)}
+    private val requestSubscribedStreamsUseCase: UserRequestUseCase by lazy {
+        UserRequestStreamsUseCase(
+            requestSubscribedStreamsRepository
+        )
+    }
 
-    private val actor by lazy { Actor(requestAllStreamsUseCase, requestSubscribedStreamsUseCase) }
+    private val requestSearchSubscribedStreamsUseCase by lazy {
+        UserRequestSearchStreamsUseCase(
+            requestSubscribedStreamsRepository
+        )
+    }
+
+    private val requestSearchAllStreamsUseCase by lazy {
+        UserRequestSearchStreamsUseCase(
+            requestAllStreamsRepository
+        )
+    }
+
+    private val actor by lazy {
+        Actor(
+            requestAllStreamsUseCase,
+            requestSubscribedStreamsUseCase,
+            requestSearchSubscribedStreamsUseCase,
+            requestSearchAllStreamsUseCase
+        )
+    }
 
 
-    val storeFactory by lazy {StoreFactory(actor)}
+    val storeFactory by lazy { StoreFactory(actor) }
 
 
     companion object {

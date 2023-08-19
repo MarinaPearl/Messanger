@@ -1,30 +1,24 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import ru.demchuk.messenger.ui.exception.runCatchingNonCancellation
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestSearchStreamsUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
-import ru.demchuk.messenger.ui.recyclerStreams.vm.loadStreams
-import ru.demchuk.messenger.ui.state.ScreenState
-import ru.demchuk.messenger.use_case.LoadStreams
+import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 import vivid.money.elmslie.core.switcher.Switcher
 import vivid.money.elmslie.coroutines.Actor
 import vivid.money.elmslie.coroutines.switch
-import java.io.StringReader
 
 class Actor(
     private val userRequestAllStreamsUseCase: UserRequestUseCase,
     private val userRequestSubscribedStreamsUseCase: UserRequestUseCase,
+    private val userRequestSearchSubscribedStreamsUseCase: UserRequestSearchStreamsUseCase,
+    private val userRequestSearchAllStreamsUseCase: UserRequestSearchStreamsUseCase,
 ) : Actor<Command, Event> {
 
 
     private val switcher = Switcher()
-    private val shared: shared by lazy { shared() }
+    private val stateFlow: MutableStateFlow<Boolean> by lazy { MutableStateFlow(true) }
+    private val sharedFlow: MutableSharedFlow<String> by lazy { MutableSharedFlow() }
 
     override fun execute(command: Command): Flow<Event> = when (command) {
         is Command.LoadAllStreams -> switcher.switch { userRequestAllStreamsUseCase.send() }
@@ -35,41 +29,38 @@ class Actor(
             .mapEvents({ list -> Event.Internal.StreamsLoaded(list) },
                 { error -> Event.Internal.ErrorLoading(error) })
 
-        is Command.Init -> shared.open().mapEvents({ Event.Internal.Init },
+        is Command.Init -> init().mapEvents({ list -> Event.Internal.StreamsLoaded(list) },
             { error -> Event.Internal.ErrorLoading(error) })
 
-        is Command.SearchStream -> switcher.switch { shared.o(command.query) }
-            .mapEvents({ Event.Internal.Init },
-                { error -> Event.Internal.ErrorLoading(error) })
+        is Command.SearchStreams -> switcher.switch { send(command.query) }
+            .mapEvents { error -> Event.Internal.ErrorLoading(error) }
+        is Command.DefineActualOperation -> setFlagActualOperation(command.flagOperation)
+            .mapEvents { error -> Event.Internal.ErrorLoading(error) }
 
     }
 
-
-}
-
-class shared() {
-    val sharedFlow: MutableSharedFlow<String> by lazy { MutableSharedFlow() }
-
-
-   fun open() : Flow<Unit>{
+    private fun init(): Flow<List<StreamModelUseCase>> {
         return sharedFlow
-            .onEach { Log.d("nnnnnnnnnnnnnnnnnnnnn", it) }
-            .filter { it.isEmpty() }
             .debounce(500L)
             .onEach { println(it) }
             .distinctUntilChanged()
-            .flatMapLatest { flow { emit(op(it)) } }
+            .flatMapLatest {
+                flow {
+                    if (stateFlow.value) {
+                        emit(userRequestSearchSubscribedStreamsUseCase.send(it))
+                    } else emit(userRequestSearchAllStreamsUseCase.send(it))
+                }
+            }
     }
 
-    fun o(s: String): Flow<Unit> {
-          return flow {
-              Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", s)
-              sharedFlow.emit(s)
-          }
-
+    private fun send(query: String): Flow<Unit> {
+        return flow {
+            sharedFlow.emit(query)
+        }
     }
-     fun op(s : String) {
-         Log.d("aaaaaaaaaaaaaaa", s)
-     }
 
+    private fun setFlagActualOperation(flagOperation: Boolean): MutableStateFlow<Boolean> {
+        stateFlow.value = flagOperation
+        return stateFlow
+    }
 }

@@ -1,6 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
-import kotlinx.coroutines.CoroutineScope
+import android.text.BoringLayout
 import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
 
 
@@ -35,7 +35,9 @@ sealed class Command {
     object LoadSubscribedStreams : Command()
     object Init : Command()
 
-    class SearchStream(val query: String) : Command()
+    class SearchStreams(val query: String) : Command()
+
+    class DefineActualOperation(val flagOperation : Boolean) : Command()
 
 }
 

@@ -21,7 +21,6 @@ import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Effect
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Event
 import ru.demchuk.messenger.ui.recyclerStreams.elm.State
-import ru.demchuk.messenger.ui.recyclerStreams.elm.StoreFactory
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.stream.StreamAdapter
 import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
@@ -81,8 +80,14 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
                 }
             }
         }
-        binding.allStreamButton.setOnClickListener { store.accept(Event.Ui.LoadingAllStreams)}
-        binding.subscribedStreamButton.setOnClickListener {store.accept(Event.Ui.LoadingSubscribedStreams)}
+        binding.allStreamButton.setOnClickListener {
+            clearFocusEditText()
+            store.accept(Event.Ui.LoadingAllStreams)
+        }
+        binding.subscribedStreamButton.setOnClickListener {
+            clearFocusEditText()
+            store.accept(Event.Ui.LoadingSubscribedStreams)
+        }
     }
 
     override fun createStore(): Store<Event, Effect, State> =
@@ -121,6 +126,11 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
     private fun createActionForTopic(): () -> Unit = {
         val activity = activity as MainActivity
         activity.router.navigateTo(MainActivity.Screens.Message())
+    }
+
+    private fun clearFocusEditText() {
+        binding.search.editTextSearch.text?.clear()
+        binding.search.textField.clearFocus()
     }
 
 }

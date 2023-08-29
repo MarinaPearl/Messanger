@@ -1,9 +1,9 @@
-package ru.demchuk.messenger.ui.recyclerStreams.use_case
+package ru.demchuk.messenger.domain.useCase.streams
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.demchuk.messenger.ui.recyclerStreams.repository.UserRequestStreamsRepository
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
+import ru.demchuk.messenger.domain.repository.UserRequestStreamsRepository
+import ru.demchuk.messenger.domain.useCase.streams.model.StreamModelUseCase
 
 class UserRequestStreamsUseCase(private val userRequestRepository: UserRequestStreamsRepository) :
     UserRequestUseCase {

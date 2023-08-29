@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.demchuk.messenger.databinding.PeopleItemBinding
+import ru.demchuk.messenger.ui.people.model.PeopleModel
 
 class Adapter : ListAdapter<PeopleModel, RecyclerView.ViewHolder>(CallBackListAdapter()) {
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.demchuk.messenger.databinding.FragmentPeopleBinding
+import ru.demchuk.messenger.ui.people.model.PeopleModel
 
 
 class PeopleFragment : Fragment() {

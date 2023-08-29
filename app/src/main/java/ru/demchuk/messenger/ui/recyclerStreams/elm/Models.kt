@@ -1,7 +1,6 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
-import android.text.BoringLayout
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
+import ru.demchuk.messenger.domain.useCase.streams.model.StreamModelUseCase
 
 
 data class State(

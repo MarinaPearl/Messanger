@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.use_case
+package ru.demchuk.messenger.domain
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

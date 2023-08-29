@@ -1,7 +1,7 @@
 package ru.demchuk.messenger.data.repository
 
 import ru.demchuk.messenger.data.model.Stream
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
+import ru.demchuk.messenger.domain.useCase.streams.model.StreamModelUseCase
 
 fun List<Stream>.toListByDomain(): List<StreamModelUseCase> {
     val listStreamDomain = mutableListOf<StreamModelUseCase>()

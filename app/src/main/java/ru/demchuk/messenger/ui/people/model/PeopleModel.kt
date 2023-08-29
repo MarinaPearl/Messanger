@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.ui.people
+package ru.demchuk.messenger.ui.people.model
 
 data class PeopleModel(
     val id: Int,

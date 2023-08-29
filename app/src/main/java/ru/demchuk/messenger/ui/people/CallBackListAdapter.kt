@@ -1,6 +1,7 @@
 package ru.demchuk.messenger.ui.people
 
 import androidx.recyclerview.widget.DiffUtil
+import ru.demchuk.messenger.ui.people.model.PeopleModel
 
 class CallBackListAdapter : DiffUtil.ItemCallback<PeopleModel>() {
 

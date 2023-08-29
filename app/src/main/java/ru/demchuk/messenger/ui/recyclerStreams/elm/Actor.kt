@@ -1,9 +1,9 @@
 package ru.demchuk.messenger.ui.recyclerStreams.elm
 
 import kotlinx.coroutines.flow.*
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestSearchStreamsUseCase
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.UserRequestUseCase
-import ru.demchuk.messenger.ui.recyclerStreams.use_case.model.StreamModelUseCase
+import ru.demchuk.messenger.domain.useCase.streams.UserRequestSearchStreamsUseCase
+import ru.demchuk.messenger.domain.useCase.streams.UserRequestUseCase
+import ru.demchuk.messenger.domain.useCase.streams.model.StreamModelUseCase
 import vivid.money.elmslie.core.switcher.Switcher
 import vivid.money.elmslie.coroutines.Actor
 import vivid.money.elmslie.coroutines.switch

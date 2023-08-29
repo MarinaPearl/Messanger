@@ -11,7 +11,7 @@ import ru.demchuk.messenger.ui.exception.runCatchingNonCancellation
 import ru.demchuk.messenger.ui.recyclerStreams.stream.Stream
 import ru.demchuk.messenger.ui.recyclerStreams.topic.Topic
 import ru.demchuk.messenger.ui.state.ScreenState
-import ru.demchuk.messenger.use_case.LoadStreams
+import ru.demchuk.messenger.domain.LoadStreams
 
 class StreamViewModel : ViewModel() {
 

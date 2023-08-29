@@ -1,4 +1,4 @@
-package ru.demchuk.messenger.ui.recyclerStreams.use_case.model
+package ru.demchuk.messenger.domain.useCase.streams.model
 
 data class StreamModelUseCase
     (

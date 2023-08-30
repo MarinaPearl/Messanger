@@ -2,7 +2,7 @@ package ru.demchuk.messenger.ui.recyclerStreams.elm
 
 import vivid.money.elmslie.coroutines.ElmStoreCompat
 
-class StoreFactory( private val actor: Actor){
+class StoreFactory(private val actor: Actor){
 
     private val store by lazy {
         ElmStoreCompat(

@@ -4,7 +4,7 @@ import retrofit2.http.GET
 import ru.demchuk.messenger.data.model.AllStreams
 import ru.demchuk.messenger.data.model.SubscriptionStreams
 
-interface GetStreamsZulipApi {
+interface StreamsGetterZulipApi {
     @GET("streams")
     suspend fun getAllStreams() : AllStreams
 

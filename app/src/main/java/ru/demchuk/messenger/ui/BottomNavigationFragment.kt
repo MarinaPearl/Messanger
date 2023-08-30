@@ -49,7 +49,7 @@ class BottomNavigationFragment() : Fragment() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_channels -> {
-                    routerFragmentBottomNavigation.navigateTo(MainActivity.Screens.Streams())
+                    routerFragmentBottomNavigation.backTo(MainActivity.Screens.Streams())
                     return@setOnItemSelectedListener true
                 }
                 R.id.icon_profile -> {

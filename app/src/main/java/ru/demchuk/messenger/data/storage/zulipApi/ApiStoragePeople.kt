@@ -2,7 +2,7 @@ package ru.demchuk.messenger.data.storage.zulipApi
 
 import ru.demchuk.messenger.data.model.User
 
-interface ApiStorageUsers {
+interface ApiStoragePeople {
 
-    suspend fun  receiveListUsers() : List<User>
+    suspend fun  receiveListPeople() : List<User>
 }

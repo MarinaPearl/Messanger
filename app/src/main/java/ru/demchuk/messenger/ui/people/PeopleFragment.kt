@@ -1,19 +1,49 @@
 package ru.demchuk.messenger.ui.people
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentPeopleBinding
-import ru.demchuk.messenger.ui.people.model.PeopleModel
+import ru.demchuk.messenger.di.PeopleDI
+import ru.demchuk.messenger.di.StreamsDI
+import ru.demchuk.messenger.ui.people.elm.Effect
+import ru.demchuk.messenger.ui.people.elm.Event
+import ru.demchuk.messenger.ui.people.elm.State
+import vivid.money.elmslie.android.base.ElmFragment
+import vivid.money.elmslie.android.storeholder.LifecycleAwareStoreHolder
+import vivid.money.elmslie.android.storeholder.StoreHolder
+import vivid.money.elmslie.core.store.Store
 
 
-class PeopleFragment : Fragment() {
+@SuppressLint("ResourceAsColor")
+class PeopleFragment() : ElmFragment<Event, Effect, State>() {
 
     private lateinit var binding: FragmentPeopleBinding
     private val adapter: Adapter by lazy { Adapter() }
+    private val snackBar: Snackbar by lazy {
+        val snackBar = Snackbar.make(
+            binding.root,
+            "Ошибка при загрузке пользователей",
+            Snackbar.LENGTH_LONG
+        )
+        val sbView: View = snackBar.view
+        sbView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.blue_green
+            )
+        )
+        snackBar.setActionTextColor(R.color.grey_black)
+    }
+
+    override val initEvent: Event = Event.Ui.Init
 
 
     override fun onCreateView(
@@ -26,36 +56,28 @@ class PeopleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.search.editTextSearch.hint = activity?.getString(R.string.users)
         binding.recyclerPeople.adapter = adapter
         binding.recyclerPeople.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        adapter.submitList(people)
     }
 
-    companion object {
-        val people = listOf<PeopleModel>(
-            PeopleModel(1, "Марина", "g@mail.com", "1"),
-            PeopleModel(2, "Марина1", "g@mail.com", "1"),
-            PeopleModel(3, "Марина2", "g@mail.com", "1"),
-            PeopleModel(4, "Марина3", "g@mail.com", "1"),
-            PeopleModel(5, "Марина4", "g@mail.com", "1"),
-            PeopleModel(6, "Марина5", "g@mail.com", "1"),
-            PeopleModel(7, "Марина6", "g@mail.com", "1"),
-            PeopleModel(8, "Марина7", "g@mail.com", "1"),
-            PeopleModel(9, "Марина8", "g@mail.com", "1"),
-            PeopleModel(10, "Марина9", "g@mail.com", "1"),
-            PeopleModel(11, "Марина10", "g@mail.com", "1"),
-            PeopleModel(12, "Марина10", "g@mail.com", "1"),
-            PeopleModel(13, "Марина10", "g@mail.com", "1"),
-            PeopleModel(14, "Марина10", "g@mail.com", "1"),
-            PeopleModel(15, "Марина10", "g@mail.com", "1"),
-            PeopleModel(16, "Марина10", "g@mail.com", "1"),
-            PeopleModel(17, "Марина10", "g@mail.com", "1"),
-            PeopleModel(18, "Марина10", "g@mail.com", "1"),
-            PeopleModel(19, "Марина10", "g@mail.com", "1"),
-            PeopleModel(20, "Марина10", "g@mail.com", "1"),
-            PeopleModel(21, "Марина10", "g@mail.com", "1"),
-        )
+
+    override val storeHolder: StoreHolder<Event, Effect, State> = LifecycleAwareStoreHolder(lifecycle) {
+        PeopleDI.INSTANCE.storeFactory.provide()}
+
+
+    override fun render(state: State) {
+        binding.apply {
+            progressBar.isVisible = state.progressBarShow
+            recyclerPeople.isVisible = state.recyclerViewShow
+            if (state.errorShow) {
+                snackBar.show()
+            }
+            if (state.listUsers != null) {
+                adapter.submitList(state.listUsers)
+            }
+        }
     }
 
 }

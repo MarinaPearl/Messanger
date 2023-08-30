@@ -7,6 +7,6 @@ import ru.demchuk.messenger.domain.useCase.streams.model.StreamModelUseCase
 class UserRequestSubscribedStreams(private val dataBaseStorage: ApiStorageStreams) :
     UserRequestStreamsRepository {
     override suspend fun receiveAnswerOnRequest(): List<StreamModelUseCase> {
-        return dataBaseStorage.receiveListStreams().toListByDomain()
+        return dataBaseStorage.receiveListStreams().toListPeopleByDomain()
     }
 }

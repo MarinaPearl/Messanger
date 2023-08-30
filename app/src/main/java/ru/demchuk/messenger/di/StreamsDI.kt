@@ -12,7 +12,7 @@ import ru.demchuk.messenger.domain.useCase.streams.UserRequestSearchStreamsUseCa
 import ru.demchuk.messenger.domain.useCase.streams.UserRequestStreamsUseCase
 import ru.demchuk.messenger.domain.useCase.streams.UserRequestUseCase
 
-class GlobalDi private constructor() {
+class StreamsDI private constructor() {
 
     private val requestAllStreamDataBase: ApiStorageStreams by lazy { ZulipAllStreams() }
 
@@ -69,10 +69,10 @@ class GlobalDi private constructor() {
 
     companion object {
 
-        lateinit var INSTANCE: GlobalDi
+        lateinit var INSTANCE: StreamsDI
 
         fun init() {
-            INSTANCE = GlobalDi()
+            INSTANCE = StreamsDI()
         }
     }
 

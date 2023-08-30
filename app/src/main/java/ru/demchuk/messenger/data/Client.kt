@@ -6,9 +6,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import ru.demchuk.messenger.data.api.GetStreamsZulipApi
-import ru.demchuk.messenger.data.api.GetUsersZulipApi
-import ru.demchuk.messenger.data.model.UserHolder
+import ru.demchuk.messenger.data.api.StreamsGetterZulipApi
+import ru.demchuk.messenger.data.api.PeopleGetterZulipApi
 
 
 object Client {
@@ -30,12 +29,12 @@ object Client {
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 
-    fun getStreams(): GetStreamsZulipApi {
-        return retrofit.create(GetStreamsZulipApi::class.java)
+    fun getStreams(): StreamsGetterZulipApi {
+        return retrofit.create(StreamsGetterZulipApi::class.java)
     }
 
-    fun getUsers(): GetUsersZulipApi {
-        return retrofit.create(GetUsersZulipApi::class.java)
+    fun getUsers(): PeopleGetterZulipApi {
+        return retrofit.create(PeopleGetterZulipApi::class.java)
     }
 
 

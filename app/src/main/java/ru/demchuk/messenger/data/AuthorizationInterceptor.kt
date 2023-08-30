@@ -3,7 +3,6 @@ package ru.demchuk.messenger.data
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.demchuk.messenger.data.model.UserHolder
 
 class AuthorizationInterceptor(private val userHolder: UserHolder) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

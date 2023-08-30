@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.demchuk.messenger.databinding.PeopleItemBinding
-import ru.demchuk.messenger.ui.people.model.PeopleModel
+import ru.demchuk.messenger.ui.people.model.UserModelUi
 
-class Adapter : ListAdapter<PeopleModel, RecyclerView.ViewHolder>(CallBackListAdapter()) {
+class Adapter : ListAdapter<UserModelUi, RecyclerView.ViewHolder>(CallBackListAdapter()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
       return ViewHolder(PeopleItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -19,10 +19,10 @@ class Adapter : ListAdapter<PeopleModel, RecyclerView.ViewHolder>(CallBackListAd
 
     inner class ViewHolder(private val binding : PeopleItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(peopleModel : PeopleModel) {
+        fun bind(userModelUi : UserModelUi) {
             binding.apply {
-                namePeople.text = peopleModel.name
-                emailPeople.text = peopleModel.email
+                namePeople.text = userModelUi.name
+                emailPeople.text = userModelUi.email
             }
         }
     }

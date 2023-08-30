@@ -33,7 +33,6 @@
              android:layout_marginStart="15dp"
              android:autofillHints="true"
              android:background="@color/black_blackGrey"
-             android:hint="@string/search"
              android:maxLines="2"
              android:textSize="25sp" />
       </com.google.android.material.textfield.TextInputLayout>

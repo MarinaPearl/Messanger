@@ -1,8 +1,6 @@
 package ru.demchuk.messenger.domain.useCase.people.model
 
-import kotlinx.serialization.SerialName
-
-data class UserModel(
+data class UserModelUseCase(
     val id: Int,
 
     val email: String,
@@ -11,5 +9,5 @@ data class UserModel(
 
     val active: Boolean,
 
-    val avatar: String
+    val avatar: String?
 )

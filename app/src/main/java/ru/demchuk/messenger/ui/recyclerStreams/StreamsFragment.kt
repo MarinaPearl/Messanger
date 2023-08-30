@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import ru.demchuk.messenger.MainActivity
 import ru.demchuk.messenger.R
 import ru.demchuk.messenger.databinding.FragmentStreamsBinding
-import ru.demchuk.messenger.di.GlobalDi
+import ru.demchuk.messenger.di.StreamsDI
 import ru.demchuk.messenger.ui.adapterDelegate.MainAdapterDelegate
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Effect
 import ru.demchuk.messenger.ui.recyclerStreams.elm.Event
@@ -27,6 +27,8 @@ import ru.demchuk.messenger.ui.recyclerStreams.topic.TopicAdapter
 import ru.demchuk.messenger.domain.useCase.streams.model.StreamModelUseCase
 import ru.demchuk.messenger.ui.recyclerStreams.vm.StreamViewModel
 import vivid.money.elmslie.android.base.ElmFragment
+import vivid.money.elmslie.android.storeholder.LifecycleAwareStoreHolder
+import vivid.money.elmslie.android.storeholder.StoreHolder
 import vivid.money.elmslie.core.store.Store
 
 
@@ -35,7 +37,7 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
 
     private lateinit var binding: FragmentStreamsBinding
     private val adapter: MainAdapterDelegate by lazy { MainAdapterDelegate() }
-    private val viewModel: StreamViewModel by viewModels()
+
     private val snackBar: Snackbar by lazy {
         val snackBar = Snackbar.make(
             binding.root,
@@ -66,9 +68,10 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.apply {
-            addDelegate(StreamAdapter(lambdaForStream))
+            addDelegate(StreamAdapter())
             addDelegate(TopicAdapter(createActionForTopic()))
         }
+        binding.search.editTextSearch.hint = activity?.getString(R.string.search)
         binding.recyclerStream.adapter = adapter
         binding.recyclerStream.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -90,8 +93,12 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         }
     }
 
-    override fun createStore(): Store<Event, Effect, State> =
-        GlobalDi.INSTANCE.storeFactory.provide()
+    override val storeHolder: StoreHolder<Event, Effect, State> = LifecycleAwareStoreHolder(lifecycle) {
+        StreamsDI.INSTANCE.storeFactory.provide()
+    }
+
+
+
 
     override fun render(state: State) {
         binding.apply {
@@ -115,13 +122,13 @@ class StreamsFragment : ElmFragment<Event, Effect, State>() {
         return listStreamUi
     }
 
-    private val lambdaForStream = { stream: Stream ->
-        binding.search.editTextSearch.clearFocus()
-        if (!stream.press) {
-            viewModel.filterList(stream)
-        }
-        viewModel.clearList(adapter.currentList, stream)
-    }
+//    private val lambdaForStream = { stream: Stream ->
+//        binding.search.editTextSearch.clearFocus()
+//        if (!stream.press) {
+//            viewModel.filterList(stream)
+//        }
+//        viewModel.clearList(adapter.currentList, stream)
+//    }
 
     private fun createActionForTopic(): () -> Unit = {
         val activity = activity as MainActivity

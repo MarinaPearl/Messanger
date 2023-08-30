@@ -18,5 +18,5 @@ data class User(
     val active: Boolean,
 
     @SerialName("avatar_url")
-    val avatar: String
+    val avatar: String?
 )

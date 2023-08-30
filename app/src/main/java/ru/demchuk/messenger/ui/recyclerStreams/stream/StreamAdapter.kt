@@ -8,7 +8,7 @@ import ru.demchuk.messenger.databinding.StreamItemBinding
 import ru.demchuk.messenger.ui.adapterDelegate.AdapterDelegate
 import ru.demchuk.messenger.ui.adapterDelegate.DelegateItem
 
-class StreamAdapter(val action: (Stream) -> Unit) : AdapterDelegate {
+class StreamAdapter() : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return ViewHolder(
@@ -36,7 +36,7 @@ class StreamAdapter(val action: (Stream) -> Unit) : AdapterDelegate {
 
             bind.stream.text = streamModel.name
             bind.buttonOpenTopic.setOnClickListener { view ->
-                action(streamModel)
+                //action(streamModel)
                 when (streamModel.press) {
                     false -> {
                         view.setBackgroundResource(R.drawable.item_close_topic)

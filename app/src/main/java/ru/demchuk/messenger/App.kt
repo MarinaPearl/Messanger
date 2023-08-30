@@ -1,12 +1,14 @@
 package ru.demchuk.messenger
 
 import android.app.Application
-import ru.demchuk.messenger.di.GlobalDi
+import ru.demchuk.messenger.di.PeopleDI
+import ru.demchuk.messenger.di.StreamsDI
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        GlobalDi.init()
+        StreamsDI.init()
+        PeopleDI.init()
     }
 }

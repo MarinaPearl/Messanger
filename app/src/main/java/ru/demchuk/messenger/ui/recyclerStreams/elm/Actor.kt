@@ -43,7 +43,6 @@ class Actor(
         return sharedFlow
             .debounce(500L)
             .onEach { println(it) }
-            .distinctUntilChanged()
             .flatMapLatest {
                 flow {
                     if (stateFlow.value) {

@@ -11,7 +11,7 @@ import ru.demchuk.messenger.data.api.PeopleGetterZulipApi
 
 
 object Client {
-    private const val BASE_URL = "https://tinkoff-android-spring-2023.zulipchat.com/api/v1/"
+    private const val BASE_URL = ""
     private val interceptor = AuthorizationInterceptor(UserHolder())
     private val interceptorLogger =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
